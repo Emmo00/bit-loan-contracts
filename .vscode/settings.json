@@ -3,6 +3,9 @@
         "Collateralizable",
         "Emmo00",
         "undercollateralization",
-        "undercollateralized"
+        "undercollateralized",
+        "IERC",
+        "Reentrancy",
+        "Accural"
     ]
 }

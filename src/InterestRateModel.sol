@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.0;
+pragma solidity ^0.8.0;
 
 import {IInterestRateModel} from "./interfaces/IInterestRateModel.sol";
 
