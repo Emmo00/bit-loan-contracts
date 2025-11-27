@@ -33,11 +33,11 @@ interface ICollateralManager {
     function getCollateralValue(address user) external view returns (uint256);
 
     /**
-     * @dev Gets the health factor of a user.
+     * @dev Gets the collateralizable value of a user based on the collateral factor.
      * @param user The address of the user.
-     * @return The health factor of the user.
+     * @return The collateralizable value of the user.
      */
-    function healthFactor(address user) external view returns (uint256);
+    function getCollateralizableValue(address user) external view returns (uint256);
 
     /**
      * @dev Seizes collateral from a user and transfers it to a liquidator(asset liquidation).
@@ -46,4 +46,24 @@ interface ICollateralManager {
      * @param liquidator The address of the liquidator receiving the seized collateral.
      */
     function seizeCollateral(address user, uint256 amount, address liquidator) external;
+
+    /////// Events ///////
+    /* @dev Emitted when collateral is deposited.
+     * @param user The address of the user who deposited collateral.
+     * @param amount The amount of collateral deposited.
+     */
+    event CollateralDeposited(address indexed user, uint256 amount);
+
+    /* @dev Emitted when collateral is withdrawn.
+     * @param user The address of the user who withdrew collateral.
+     * @param amount The amount of collateral withdrawn.
+     */
+    event CollateralWithdrawn(address indexed user, uint256 amount);
+
+    /* @dev Emitted when collateral is seized.
+     * @param user The address of the user whose collateral was seized.
+     * @param amount The amount of collateral seized.
+     * @param liquidator The address of the liquidator who received the seized collateral.
+     */
+    event CollateralSeized(address indexed user, uint256 amount, address indexed liquidator);
 }
