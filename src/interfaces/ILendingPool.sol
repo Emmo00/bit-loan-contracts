@@ -46,6 +46,21 @@ interface ILendingPool {
      */
     function getBorrowBalance(address user) external view returns (uint256);
 
+    /**
+     * Gets the health factor of a user.
+     * @param user address of the user
+     * @return health factor of the user
+     */
+    function healthFactor(address user) external view returns (uint256);
+
+    /**
+     * Gets the health factor of a user after a hypothetical collateral withdrawal.
+     * @param user address of the user
+     * @param withdrawAmount amount of collateral to hypothetically withdraw
+     * @return health factor of the user after the hypothetical withdrawal
+     */
+    function healthFactorAfterWithdraw(address user, uint256 withdrawAmount) external view returns (uint256);
+
     //////////// INTEREST RATES ////////////
     /**
      * Accrues interest on the lending pool.
