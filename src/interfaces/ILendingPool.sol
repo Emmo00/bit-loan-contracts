@@ -20,7 +20,7 @@ interface ILendingPool {
     function withdraw(uint256 amount) external;
 
     /**
-     * Gets the supply balance of a user.
+     * Gets the supply balance of a user (including interest).
      * @param user address of the user
      * @return supply balance of the user
      */
@@ -35,9 +35,10 @@ interface ILendingPool {
 
     /**
      * Repays a specified amount of the pool asset to the lending pool.
+     * @param borrower address of the borrower whose debt is being paid
      * @param amount amount of the pool asset to repay
      */
-    function repay(uint256 amount) external;
+    function repay(address borrower, uint256 amount) external;
 
     /**
      * Gets the borrow balance of a user.
@@ -54,12 +55,23 @@ interface ILendingPool {
     function healthFactor(address user) external view returns (uint256);
 
     /**
+     * Gets the health factor of the user after a hypothetical borrow
+     * @param user address of the user
+     * @param borrowAmount amount of the asset to be borrowed
+     * @return health health factor of the user after hypothetical borrow (scaled)
+     */
+    function healthFactorAfterBorrow(address user, uint256 borrowAmount) external view returns (uint256);
+
+    /**
      * Gets the health factor of a user after a hypothetical collateral withdrawal.
      * @param user address of the user
      * @param withdrawAmount amount of collateral to hypothetically withdraw
      * @return health factor of the user after the hypothetical withdrawal
      */
-    function healthFactorAfterWithdraw(address user, uint256 withdrawAmount) external view returns (uint256);
+    function healthFactorAfterWithdrawCollateral(address user, uint256 withdrawAmount)
+        external
+        view
+        returns (uint256);
 
     //////////// INTEREST RATES ////////////
     /**
@@ -71,19 +83,19 @@ interface ILendingPool {
      * Gets the current borrow interest rate.
      * @return borrow interest rate
      */
-    function getBorrowRate() external view returns (uint256);
+    function borrowRate() external view returns (uint256);
 
     /**
      * Gets the current supply interest rate.
      * @return supply interest rate
      */
-    function getSupplyRate() external view returns (uint256);
+    function supplyRate() external view returns (uint256);
 
     /**
      * Gets the current utilization rate of the lending pool.
      * @return utilization rate
      */
-    function getUtilizationRate() external view returns (uint256);
+    function utilization() external view returns (uint256);
 
     //////////// LIQUIDATION ////////////
     /**
@@ -93,9 +105,12 @@ interface ILendingPool {
      */
     function liquidate(address user, uint256 amount) external;
 
-    /**
-     * Gets the available liquidity in the lending pool.
-     * @return available liquidity
-     */
-    function getAvailableLiquidity() external view returns (uint256);
+    event Deposit(address indexed user, uint256 amount);
+    event Withdraw(address indexed user, uint256 amount);
+    event Borrow(address indexed user, uint256 amount);
+    event Repay(address indexed payer, address indexed borrower, uint256 amount);
+    event Liquidate(
+        address indexed liquidator, address indexed borrower, uint256 repayAmount, uint256 seizedCollateral
+    );
+    event AccrueInterest(uint256 borrowIndex, uint256 supplyIndex, uint256 interestAccrued, uint256 reservesAdded);
 }
