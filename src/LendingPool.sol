@@ -15,8 +15,8 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
     using SafeERC20 for IERC20;
     using ScaleMath for uint256;
 
-    uint256 private constant SCALE = 10e18;
-    uint256 private constant SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
+    uint256 private constant SCALE = 1e18;
+    uint256 private constant SECONDS_PER_YEAR = 365 days;
 
     IERC20 public immutable borrowAsset;
     ICollateralManager public immutable collateralManager;
@@ -89,14 +89,14 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
 
     function withdraw(uint256 amount, address receiver) external override nonReentrant {
         require(amount > 0, "LendingPool: withdraw zero");
+        require(receiver != address(0), "LendingPool: invalid receiver");
         accrueInterest();
 
         uint256 userSupply = getSupplyBalance(msg.sender);
         require(userSupply >= amount, "LendingPool: insufficient supply");
 
-        // compute raw principal to set (principal = userSupplyAfter * supplierIndex / supplyIndex)
         uint256 newSupply = userSupply - amount;
-        // set principalSupply to raw units corresponding to newSupply
+        // Store the updated principal and index consistently
         principalSupply[msg.sender] = newSupply;
         supplierIndex[msg.sender] = supplyIndex;
 
@@ -110,6 +110,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
 
     function withdrawCollateral(uint256 amount, address receiver) external override nonReentrant {
         require(amount > 0, "LendingPool: withdraw zero");
+        require(receiver != address(0), "LendingPool: invalid receiver");
         accrueInterest();
 
         // check health factor after withdrawal
@@ -122,6 +123,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
 
     function borrow(uint256 amount, address receiver) external override nonReentrant {
         require(amount > 0, "LendingPool: borrow zero");
+        require(receiver != address(0), "LendingPool: invalid receiver");
         accrueInterest();
 
         // check health factor after borrow: collateral value and liquidation threshold from collateral manager
@@ -239,13 +241,11 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         uint256 brApr = borrowRate();
         uint256 srApr = supplyRate();
 
-        // convert to per-second rates (WAD)
-        uint256 brPerSec = brApr / SECONDS_PER_YEAR;
-        uint256 srPerSec = srApr / SECONDS_PER_YEAR;
-
-        // interestFactor = rate * elapsed (approximate simple compounding per small interval)
-        // interestFactor is WAD
-        uint256 interestFactor = brPerSec * elapsed;
+        // interestFactor = (rate * elapsed) / SECONDS_PER_YEAR
+        uint256 interestFactor = (brApr * elapsed) / SECONDS_PER_YEAR;
+        
+        // Prevent overflow for very large elapsed times
+        require(elapsed <= 365 days, "LendingPool: elapsed time too large");
 
         // interestAccrued = totalBorrows * interestFactor
         uint256 interestAccrued = totalBorrows.scaleMul(interestFactor);
@@ -261,7 +261,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         borrowIndex = borrowIndex.scaleMul(SCALE + interestFactor);
 
         // supplyIndex grows by supplyRate
-        uint256 supplyFactor = srPerSec * elapsed; // WAD
+        uint256 supplyFactor = (srApr * elapsed) / SECONDS_PER_YEAR; // WAD
         supplyIndex = supplyIndex.scaleMul(SCALE + supplyFactor);
 
         lastAccrualTimestamp = timestamp;
@@ -361,27 +361,29 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
 
     function healthFactorAfterBorrow(address user, uint256 borrowAmount) public view returns (uint256) {
         // compute new borrow value (after borrowing)
-        uint256 borrowerCurrentDebt = getBorrowBalance(msg.sender);
+        uint256 borrowerCurrentDebt = getBorrowBalance(user); // Fixed: use 'user' not 'msg.sender'
         uint256 newDebt = borrowerCurrentDebt + borrowAmount;
+        if (newDebt == 0) return type(uint256).max;
+        
         uint256 collateralValueWad = collateralManager.getCollateralValue(user);
-        uint256 ltv = collateralManager.getCollateralFactor();
+        uint256 lt = collateralManager.getLiquidationThreshold(); // Fixed: use liquidationThreshold
 
-        // if newDebt==0, hf infinite; else compute hf = (collateralValue * lt) / newDebt
-        require(newDebt > 0, "LendingPool: invalid debt calc");
-
-        uint256 hfAfter = (collateralValueWad * ltv) / newDebt;
+        uint256 hfAfter = (collateralValueWad * lt) / newDebt;
         return hfAfter;
     }
 
     function healthFactorAfterWithdrawCollateral(address user, uint256 withdrawAmount) public view returns (uint256) {
         uint256 borrowValue = getBorrowValue(user);
-        if (borrowValue == 0) return SCALE;
+        if (borrowValue == 0) return type(uint256).max;
 
         uint256 collateralValueWad = collateralManager.getCollateralValue(user);
-        uint256 collateralValueAfter = collateralValueWad - withdrawAmount.scaleMul(priceOracle.getEthPrice());
+        // withdrawAmount is already in ETH wei, convert to borrow asset value
+        uint256 withdrawValueInBorrowAsset = (withdrawAmount * priceOracle.getEthPrice()) / SCALE;
+        
+        if (collateralValueWad <= withdrawValueInBorrowAsset) return 0;
+        uint256 collateralValueAfter = collateralValueWad - withdrawValueInBorrowAsset;
         uint256 lt = collateralManager.getLiquidationThreshold();
 
-        if (collateralValueAfter == 0) return 0;
         return (collateralValueAfter * lt) / borrowValue;
     }
 }
