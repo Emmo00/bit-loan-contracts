@@ -50,6 +50,11 @@ interface ICollateralManager {
     function seizeCollateral(address user, uint256 amount, address liquidator) external;
 
     /**
+     * Total collateral deposited in the protocol
+     */
+    function totalCollateral() external view returns (uint256);
+
+    /**
      * @dev Gets the current liquidation threshold
      * @return The liquidation threshold
      */

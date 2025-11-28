@@ -21,6 +21,8 @@ contract CollateralManager is ICollateralManager, Ownable {
 
     mapping(address => uint256) private _collateralBalance;
     ILendingPool public lendingPool;
+    
+    uint256 private _totalCollateralDeposited;
 
     modifier onlyLendingPool() {
         require(msg.sender == address(lendingPool), "CollateralManager: Caller is not the lending pool");
@@ -43,6 +45,7 @@ contract CollateralManager is ICollateralManager, Ownable {
     function depositCollateral(address onBehalfOf) external payable override onlyLendingPool {
         require(msg.value > 0, "CollateralManager: Deposit amount must be greater than zero");
         _collateralBalance[onBehalfOf] += msg.value;
+        _totalCollateralDeposited += msg.value;
 
         emit CollateralDeposited(onBehalfOf, msg.value);
     }
@@ -52,6 +55,7 @@ contract CollateralManager is ICollateralManager, Ownable {
         require(_collateralBalance[user] >= amount, "CollateralManager: Insufficient collateral");
 
         _collateralBalance[user] -= amount;
+        _totalCollateralDeposited -= amount;
         payable(to).transfer(amount);
         emit CollateralWithdrawn(user, amount);
     }
@@ -63,6 +67,7 @@ contract CollateralManager is ICollateralManager, Ownable {
         uint256 seizeAmount = amount > userBalance ? userBalance : amount;
 
         _collateralBalance[user] -= seizeAmount;
+        _totalCollateralDeposited -= seizeAmount;
         payable(liquidator).transfer(seizeAmount);
 
         emit CollateralSeized(user, seizeAmount, liquidator);
@@ -106,6 +111,10 @@ contract CollateralManager is ICollateralManager, Ownable {
         require(newThreshold > 0 && newThreshold <= SCALE, "CollateralManager: Invalid liquidation threshold");
         liquidationThreshold = newThreshold;
         emit LiquidationThresholdUpdated(newThreshold);
+    }
+
+    function totalCollateral() external view override returns (uint256) {
+        return _totalCollateralDeposited;
     }
 
     function setLendingPool(address _lendingPool) external onlyOwner {

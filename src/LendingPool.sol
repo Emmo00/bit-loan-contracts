@@ -386,4 +386,9 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
 
         return (collateralValueAfter * lt) / borrowValue;
     }
+
+    /// @notice get total collateral deposited in the protocol
+    function totalCollateral() external view returns (uint256) {
+        return collateralManager.totalCollateral();
+    }
 }

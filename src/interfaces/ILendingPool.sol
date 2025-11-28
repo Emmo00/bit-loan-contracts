@@ -111,6 +111,12 @@ interface ILendingPool {
      */
     function utilization() external view returns (uint256);
 
+    /**
+     * Gets the total collateral deposited in the protocol.
+     * @return total collateral amount
+     */
+    function totalCollateral() external view returns (uint256);
+
     //////////// LIQUIDATION ////////////
     /**
      * Liquidates a specified amount of a user's borrow.
