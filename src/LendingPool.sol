@@ -82,7 +82,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         emit Deposit(msg.sender, amount);
     }
 
-    function withdraw(uint256 amount) external nonReentrant {
+    function depositCollateral() external payable override nonReentrant {
+        require(msg.value > 0, "LendingPool: deposit zero");
+        collateralManager.depositCollateral{value: msg.value}(msg.sender);
+    }
+
+    function withdraw(uint256 amount, address receiver) external override nonReentrant {
         require(amount > 0, "LendingPool: withdraw zero");
         accrueInterest();
 
@@ -98,12 +103,24 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         totalSupply -= amount;
 
         // transfer tokens out
-        borrowAsset.safeTransfer(msg.sender, amount);
+        borrowAsset.safeTransfer(receiver, amount);
 
-        emit Withdraw(msg.sender, amount);
+        emit Withdraw(msg.sender, amount, receiver);
     }
 
-    function borrow(uint256 amount) external nonReentrant {
+    function withdrawCollateral(uint256 amount, address receiver) external override nonReentrant {
+        require(amount > 0, "LendingPool: withdraw zero");
+        accrueInterest();
+
+        // check health factor after withdrawal
+        uint256 hfAfter = healthFactorAfterWithdrawCollateral(msg.sender, amount);
+        require(hfAfter >= SCALE, "LendingPool: health factor too low");
+
+        // withdraw collateral from collateral manager
+        collateralManager.withdrawCollateral(msg.sender, amount, receiver);
+    }
+
+    function borrow(uint256 amount, address receiver) external override nonReentrant {
         require(amount > 0, "LendingPool: borrow zero");
         accrueInterest();
 
@@ -121,9 +138,9 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         totalBorrows += amount;
 
         // transfer underlying to borrower
-        borrowAsset.safeTransfer(msg.sender, amount);
+        borrowAsset.safeTransfer(receiver, amount);
 
-        emit Borrow(msg.sender, amount);
+        emit Borrow(msg.sender, amount, receiver);
     }
 
     function repay(address borrower, uint256 amount) external nonReentrant {
@@ -275,6 +292,14 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         interestRateModel = IInterestRateModel(newModel);
     }
 
+    function setCollateralFactor(uint256 newFactor) external onlyOwner {
+        collateralManager.setCollateralFactor(newFactor);
+    }
+
+    function setLiquidationThreshold(uint256 newThreshold) external onlyOwner {
+        collateralManager.setLiquidationThreshold(newThreshold);
+    }
+
     /// @notice get current cash in the pool (borrowAsset tokens held by contract)
     function getCash() public view returns (uint256) {
         return borrowAsset.balanceOf(address(this));
@@ -339,12 +364,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         uint256 borrowerCurrentDebt = getBorrowBalance(msg.sender);
         uint256 newDebt = borrowerCurrentDebt + borrowAmount;
         uint256 collateralValueWad = collateralManager.getCollateralValue(user);
-        uint256 ltv = collateralManager.get();
+        uint256 ltv = collateralManager.getCollateralFactor();
 
         // if newDebt==0, hf infinite; else compute hf = (collateralValue * lt) / newDebt
         require(newDebt > 0, "LendingPool: invalid debt calc");
 
-        uint256 hfAfter = (collateralValueWad * lt) / newDebt;
+        uint256 hfAfter = (collateralValueWad * ltv) / newDebt;
         return hfAfter;
     }
 

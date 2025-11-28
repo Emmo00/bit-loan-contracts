@@ -16,19 +16,21 @@ interface ILendingPool {
     /**
      * Deposit collateral
      */
-    function depositCollateral() payable external;
+    function depositCollateral() external payable;
 
     /**
      * Withdraws a specified amount of the pool asset from the lending pool.
      * @param amount amount of the pool asset to withdraw
+     * @param receiver address of the receiver
      */
-    function withdraw(uint256 amount) external;
+    function withdraw(uint256 amount, address receiver) external;
 
     /**
      * Withdraw collateral from lending pool
      * @param amount amount of collateral to withdraw
+     * @param receiver address to send the collateral to
      */
-    function withdrawCollateral(uint256 amount) external;
+    function withdrawCollateral(uint256 amount, address receiver) external;
 
     /**
      * Gets the supply balance of a user (including interest).
@@ -41,8 +43,9 @@ interface ILendingPool {
     /**
      * Borrows a specified amount of the pool asset from the lending pool.
      * @param amount amount of the pool asset to borrow
+     * @param receiver address of the receiver of the loan
      */
-    function borrow(uint256 amount) external;
+    function borrow(uint256 amount, address receiver) external;
 
     /**
      * Repays a specified amount of the pool asset to the lending pool.
@@ -121,8 +124,8 @@ interface ILendingPool {
     function setLiquidationThreshold(uint256 newThreshold) external;
 
     event Deposit(address indexed user, uint256 amount);
-    event Withdraw(address indexed user, uint256 amount);
-    event Borrow(address indexed user, uint256 amount);
+    event Withdraw(address indexed user, uint256 amount, address receiver);
+    event Borrow(address indexed user, uint256 amount, address receiver);
     event Repay(address indexed payer, address indexed borrower, uint256 amount);
     event Liquidate(
         address indexed liquidator, address indexed borrower, uint256 repayAmount, uint256 seizedCollateral
