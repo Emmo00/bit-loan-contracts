@@ -339,7 +339,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         uint256 borrowerCurrentDebt = getBorrowBalance(msg.sender);
         uint256 newDebt = borrowerCurrentDebt + borrowAmount;
         uint256 collateralValueWad = collateralManager.getCollateralValue(user);
-        uint256 lt = collateralManager.getLiquidationThreshold();
+        uint256 ltv = collateralManager.get();
 
         // if newDebt==0, hf infinite; else compute hf = (collateralValue * lt) / newDebt
         require(newDebt > 0, "LendingPool: invalid debt calc");

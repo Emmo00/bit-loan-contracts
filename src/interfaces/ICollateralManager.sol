@@ -50,10 +50,16 @@ interface ICollateralManager {
     function seizeCollateral(address user, uint256 amount, address liquidator) external;
 
     /**
+     * @dev Gets the current liquidation threshold
+     * @return The liquidation threshold
+     */
+    function getLiquidationThreshold() external view returns (uint256);
+
+    /**
      * @dev Gets the current collateral factor.
      * @return The collateral factor.
      */
-    function getLiquidationThreshold() external view returns (uint256);
+    function getCollateralFactor() external view returns (uint256);
 
     /**
      * @dev Sets a new collateral factor.

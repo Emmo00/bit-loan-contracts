@@ -49,11 +49,6 @@ contract CollateralManager is ICollateralManager {
     function withdrawCollateral(address user, uint256 amount, address to) external override onlyLendingPool {
         require(amount > 0, "CollateralManager: Withdraw amount must be greater than zero");
         require(_collateralBalance[user] >= amount, "CollateralManager: Insufficient collateral");
-        // TODO: make sure the health factor is checked
-        // require(
-        //     lendingPool.healthFactorAfterWithdraw(user, amount) > HEALTH_FACTOR_THRESHOLD,
-        //     "CollateralManager: Cannot withdraw collateral that would lead to undercollateralization"
-        // );
 
         _collateralBalance[user] -= amount;
         payable(to).transfer(amount);
@@ -92,6 +87,10 @@ contract CollateralManager is ICollateralManager {
 
     function getLiquidationThreshold() external view override returns (uint256) {
         return liquidationThreshold;
+    }
+
+    function getCollateralFactor() external view override returns (uint256) {
+        return collateralFactor;
     }
 
     function setCollateralFactor(uint256 newFactor) external override onlyLendingPool {

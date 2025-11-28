@@ -14,10 +14,17 @@ interface ILendingPool {
     function deposit(uint256 amount) external;
 
     /**
+     * Deposit collateral
+     */
+    function depositCollateral() payable external;
+
+    /**
      * Withdraws a specified amount of the pool asset from the lending pool.
      * @param amount amount of the pool asset to withdraw
      */
     function withdraw(uint256 amount) external;
+
+    function withdrawCollateral(uint256 amount) external;
 
     /**
      * Gets the supply balance of a user (including interest).
