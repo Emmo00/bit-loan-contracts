@@ -19,16 +19,15 @@ contract CollateralManager is ICollateralManager {
     IPriceOracle public immutable priceOracle;
 
     mapping(address => uint256) private _collateralBalance;
-    ILendingPool public immutable lendingPool;
+    ILendingPool public lendingPool;
 
     modifier onlyLendingPool() {
         require(msg.sender == address(lendingPool), "CollateralManager: Caller is not the lending pool");
         _;
     }
 
-    constructor(address _priceOracle, address _lendingPool, uint256 _collateralFactor, uint256 _liquidationThreshold) {
+    constructor(address _priceOracle, uint256 _collateralFactor, uint256 _liquidationThreshold) {
         require(_priceOracle != address(0), "CollateralManager: Invalid price oracle address");
-        require(_lendingPool != address(0), "CollateralManager: Invalid lending pool address");
         require(_collateralFactor > 0 && _collateralFactor <= SCALE, "CollateralManager: Invalid collateral factor");
         require(
             _liquidationThreshold > 0 && _liquidationThreshold <= SCALE,
@@ -36,7 +35,6 @@ contract CollateralManager is ICollateralManager {
         );
 
         priceOracle = IPriceOracle(_priceOracle);
-        lendingPool = ILendingPool(_lendingPool);
         collateralFactor = _collateralFactor;
         liquidationThreshold = _liquidationThreshold;
     }
@@ -106,5 +104,10 @@ contract CollateralManager is ICollateralManager {
         require(newThreshold > 0 && newThreshold <= SCALE, "CollateralManager: Invalid liquidation threshold");
         liquidationThreshold = newThreshold;
         emit LiquidationThresholdUpdated(newThreshold);
+    }
+
+    function setLendingPool(address _lendingPool) external {
+        if (address(lendingPool) != address(0)) return;
+        lendingPool = ILendingPool(_lendingPool);
     }
 }
