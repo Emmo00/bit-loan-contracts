@@ -77,6 +77,8 @@ contract CollateralManager is ICollateralManager {
             return 0;
         }
         uint256 ethPrice = priceOracle.getEthPrice();
+        // userCollateral is in wei (18 decimals), ethPrice is scaled to 18 decimals
+        // Result should be in borrow asset units (also 18 decimals)
         return (userCollateral * ethPrice) / SCALE;
     }
 
@@ -106,7 +108,8 @@ contract CollateralManager is ICollateralManager {
     }
 
     function setLendingPool(address _lendingPool) external {
-        if (address(lendingPool) != address(0)) return;
+        require(address(lendingPool) == address(0), "CollateralManager: lending pool already set");
+        require(_lendingPool != address(0), "CollateralManager: invalid lending pool address");
         lendingPool = ILendingPool(_lendingPool);
     }
 }
