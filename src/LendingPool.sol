@@ -356,7 +356,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         uint256 collateralValue = collateralManager.getCollateralValue(user); // WAD
         uint256 lt = collateralManager.getLiquidationThreshold(); // WAD
         // hf = (collateralValue * lt) / borrowValue
-        return (collateralValue * lt) / borrowValue;
+        return (collateralValue.scaleMul(lt)).scaleDiv(borrowValue);
     }
 
     function healthFactorAfterBorrow(address user, uint256 borrowAmount) public view returns (uint256) {
@@ -368,7 +368,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         uint256 collateralValueWad = collateralManager.getCollateralValue(user);
         uint256 lt = collateralManager.getLiquidationThreshold(); // Fixed: use liquidationThreshold
 
-        uint256 hfAfter = (collateralValueWad * lt) / newDebt;
+        uint256 hfAfter = (collateralValueWad.scaleMul(lt)).scaleDiv(newDebt);
         return hfAfter;
     }
 
@@ -384,7 +384,7 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable {
         uint256 collateralValueAfter = collateralValueWad - withdrawValueInBorrowAsset;
         uint256 lt = collateralManager.getLiquidationThreshold();
 
-        return (collateralValueAfter * lt) / borrowValue;
+        return (collateralValueAfter.scaleMul(lt)).scaleDiv(borrowValue);
     }
 
     /// @notice get total collateral deposited in the protocol
