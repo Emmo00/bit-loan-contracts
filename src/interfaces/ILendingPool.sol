@@ -24,6 +24,10 @@ interface ILendingPool {
      */
     function withdraw(uint256 amount) external;
 
+    /**
+     * Withdraw collateral from lending pool
+     * @param amount amount of collateral to withdraw
+     */
     function withdrawCollateral(uint256 amount) external;
 
     /**
@@ -111,6 +115,10 @@ interface ILendingPool {
      * @param amount amount of the pool asset to liquidate
      */
     function liquidate(address user, uint256 amount) external;
+
+    //////////// ADMIN ///////////////////
+    function setCollateralFactor(uint256 newFactor) external;
+    function setLiquidationThreshold(uint256 newThreshold) external;
 
     event Deposit(address indexed user, uint256 amount);
     event Withdraw(address indexed user, uint256 amount);
