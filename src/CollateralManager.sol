@@ -4,13 +4,14 @@ pragma solidity ^0.8.0;
 import {ICollateralManager} from "./interfaces/ICollateralManager.sol";
 import {IPriceOracle} from "./interfaces/IPriceOracle.sol";
 import {ILendingPool} from "./interfaces/ILendingPool.sol";
+import {Ownable} from "@openzeppelin/access/Ownable.sol";
 
 /**
  * @title Collateral Manager
  * @author Emmo00
  * @dev Manages collateral deposits, withdrawals, and valuations in a lending protocol.
  */
-contract CollateralManager is ICollateralManager {
+contract CollateralManager is ICollateralManager, Ownable {
     uint256 public collateralFactor;
     uint256 public liquidationThreshold;
     uint256 private constant SCALE = 1e18;
@@ -26,7 +27,7 @@ contract CollateralManager is ICollateralManager {
         _;
     }
 
-    constructor(address _priceOracle, uint256 _collateralFactor, uint256 _liquidationThreshold) {
+    constructor(address _priceOracle, uint256 _collateralFactor, uint256 _liquidationThreshold) Ownable(msg.sender) {
         require(_priceOracle != address(0), "CollateralManager: Invalid price oracle address");
         require(_collateralFactor > 0 && _collateralFactor <= SCALE, "CollateralManager: Invalid collateral factor");
         require(
@@ -107,7 +108,7 @@ contract CollateralManager is ICollateralManager {
         emit LiquidationThresholdUpdated(newThreshold);
     }
 
-    function setLendingPool(address _lendingPool) external {
+    function setLendingPool(address _lendingPool) external onlyOwner {
         require(address(lendingPool) == address(0), "CollateralManager: lending pool already set");
         require(_lendingPool != address(0), "CollateralManager: invalid lending pool address");
         lendingPool = ILendingPool(_lendingPool);
