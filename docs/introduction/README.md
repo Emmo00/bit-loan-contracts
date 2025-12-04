@@ -67,7 +67,7 @@ Liquidity providers who deposit cNGN into the lending pool and earn interest fro
 
 Participants who monitor borrower health and perform liquidations when positions fall below the required safety threshold. They receive financial incentives for restoring the system to solvency.
 
-#### **Developers / Integrators**
+#### **Developers**
 
 Builders who integrate BitLoan into wallets, dashboards, or third-party applications. They rely on BitLoan’s simple interfaces, deterministic math, and robust contract architecture.
 
