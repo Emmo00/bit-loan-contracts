@@ -6,7 +6,7 @@ description: >-
 
 # Mathematical Models
 
-### 5.1 Utilization
+### Utilization
 
 Measures how much of the supplied liquidity is currently borrowed.
 
@@ -18,7 +18,7 @@ Higher utilization results in higher variable interest rates.
 
 ***
 
-### 5.2 Borrow Rate
+### Borrow Rate
 
 Linear interest rate model:
 
@@ -33,7 +33,7 @@ Where:
 
 ***
 
-### 5.3 Supply Rate
+### Supply Rate
 
 Supplier yield is a function of borrow rate, utilization, and reserve factor.
 
@@ -45,7 +45,7 @@ Reserve Factor represents protocol revenue.
 
 ***
 
-### 5.4 Interest Accrual (per second)
+### Interest Accrual (per second)
 
 Interest increases indices over time:
 
@@ -59,7 +59,7 @@ Indices ensure interest remains proportional for all users.
 
 ***
 
-### 5.5 Borrow Balance
+### Borrow Balance
 
 A user’s current borrow balance:
 
@@ -69,7 +69,7 @@ borrowBalance = principal * (borrowIndex / userBorrowIndex)
 
 ***
 
-### 5.6 Supply Balance
+### Supply Balance
 
 A user’s current supply balance:
 
@@ -79,7 +79,7 @@ supplyBalance = principal * (supplyIndex / userSupplyIndex)
 
 ***
 
-### 5.7 Collateral Value
+### Collateral Value
 
 The USD (or base currency) value of the user’s ETH collateral:
 
@@ -89,7 +89,7 @@ collateralValue = ETH_amount * ETH_price
 
 ***
 
-### 5.8 Health Factor
+### Health Factor
 
 Determines borrowing safety. If HF < 1.0, liquidation can occur.
 
@@ -99,7 +99,7 @@ HF = (collateralValue * liquidationThreshold) / borrowValue
 
 ***
 
-### 5.9 Maximum Borrow Amount
+### Maximum Borrow Amount
 
 How much a user can borrow based on collateral factor:
 

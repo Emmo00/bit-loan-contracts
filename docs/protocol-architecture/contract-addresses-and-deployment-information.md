@@ -7,7 +7,7 @@ description: >-
 
 # Contract Addresses & Deployment Information
 
-#### 6.1 Mainnet
+#### Mainnet
 
 | Contract Name      | Address | Purpose                                                       |
 | ------------------ | ------- | ------------------------------------------------------------- |
@@ -17,7 +17,7 @@ description: >-
 | InterestRateModel  | `0x...` | Computes dynamic borrow and supply rates                      |
 | ERC20 Borrow Asset | `0x...` | Token that users can borrow (e.g., cNGN)                      |
 
-#### 6.2 Testnet
+#### Testnet
 
 | Contract Name      | Address | Purpose                                                 |
 | ------------------ | ------- | ------------------------------------------------------- |

@@ -10,7 +10,7 @@ Below is a polished, publication-ready version of **Chapter 3: Economic & Protoc
 
 ***
 
-## **3. Economic & Protocol Parameters**
+## **Economic & Protocol Parameters**
 
 BitLoan’s behavior is driven by a set of economic constants and risk parameters.\
 These parameters determine how much users can borrow, how interest evolves, when liquidations occur, and how the protocol generates revenue.\
@@ -18,7 +18,7 @@ This section documents every key scalar and explains its purpose in the system.
 
 ***
 
-### **3.1 Fixed Parameters**
+### **Fixed Parameters**
 
 The following parameters are defined as immutable or configuration-level constants within the protocol:
 
@@ -37,7 +37,7 @@ These parameters can be adjusted in future protocol upgrades but remain fixed fo
 
 ***
 
-### **3.2 Meaning of Each Parameter**
+### **Meaning of Each Parameter**
 
 Below are detailed definitions of what each parameter represents in protocol operations.
 
@@ -112,7 +112,7 @@ Reserves strengthen long-term liquidity and protocol sustainability.
 
 ***
 
-### **3.3 What These Parameters Control**
+### **What These Parameters Control**
 
 These parameters collectively shape the core economic dynamics of BitLoan.
 

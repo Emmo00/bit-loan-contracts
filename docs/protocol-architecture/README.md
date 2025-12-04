@@ -7,7 +7,7 @@ description: >-
 
 # Protocol Architecture
 
-### **2.1 Architecture Overview**
+### **Architecture Overview**
 
 BitLoan follows a modular, highly-segmented architecture designed for clarity, security, and upgradeability. Each major responsibility in the lending lifecycle—collateral tracking, interest calculation, price feeds, and lending logic—is separated into its own contract.
 
@@ -66,13 +66,13 @@ These invariants simplify auditing, reduce attack surface, and maintain strong s
 
 ***
 
-### **2.2 Core Contracts**
+### **Core Contracts**
 
 Below is a breakdown of all core components.
 
 ***
 
-### **2.2.1 LendingPool**
+### **LendingPool**
 
 #### **Role**
 
@@ -115,7 +115,7 @@ The **central contract** that handles all lending, borrowing, and interest accou
 
 ***
 
-### **2.2.2 CollateralManager**
+### **CollateralManager**
 
 #### **Role**
 
@@ -150,7 +150,7 @@ Handles the storage and valuation of all ETH collateral in the system.
 
 ***
 
-### **2.2.3 PriceOracle**
+### **PriceOracle**
 
 #### **Role**
 
@@ -170,7 +170,7 @@ Provides the current ETH → Borrow Token price.
 
 ***
 
-### **2.2.4 InterestRateModel**
+### **InterestRateModel**
 
 #### **Role**
 
@@ -192,7 +192,7 @@ Computes interest rates based on pool utilization.
 
 ***
 
-### **2.2.5 ERC-20 Borrow Asset**
+### **ERC-20 Borrow Asset**
 
 The underlying token lent out by the protocol.
 

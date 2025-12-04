@@ -1,6 +1,6 @@
 # Introduction
 
-### **1.1 What is BitLoan?**
+### **What is BitLoan?**
 
 BitLoan is a decentralized, collateralized lending protocol that enables users to borrow ERC-20 assets by locking ETH as collateral. It operates without intermediaries, using smart contracts to enforce the rules of borrowing, interest accrual, and liquidation.
 
@@ -21,7 +21,7 @@ BitLoan aims to provide a simple, predictable lending experience while leveragin
 
 ***
 
-### **1.2 Why BitLoan Exists**
+### **Why BitLoan Exists**
 
 BitLoan addresses key needs in decentralized finance:
 
@@ -51,7 +51,7 @@ BitLoan exists to make borrowing simple, fair, and transparent—powered entirel
 
 ***
 
-### **1.3 Target Users**
+### **Target Users**
 
 BitLoan serves multiple participant types, each playing a distinct role in the ecosystem.
 
@@ -73,7 +73,7 @@ Builders who integrate BitLoan into wallets, dashboards, or third-party applicat
 
 ***
 
-### **1.4 High-Level How It Works**
+### **High-Level How It Works**
 
 BitLoan operates through a straightforward flow:
 

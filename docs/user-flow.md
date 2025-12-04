@@ -6,7 +6,7 @@ description: >-
 
 # User Flow
 
-### **4.1 Supplying Liquidity (ERC20 → Earn Interest)**
+### **Supplying Liquidity (ERC20 → Earn Interest)**
 
 Users who want to earn yield can supply the ERC20 borrow asset (e.g., cNGN) into the lending pool.\
 Suppliers earn interest automatically from borrowers.
@@ -34,7 +34,7 @@ Suppliers earn interest automatically from borrowers.
 
 ***
 
-### **4.2 Depositing Collateral (ETH)**
+### **Depositing Collateral (ETH)**
 
 Borrowers must deposit ETH before they can take a loan.\
 Collateral is tracked separately from ERC20 supply funds.
@@ -65,7 +65,7 @@ Collateral is tracked separately from ERC20 supply funds.
 
 ***
 
-### **4.3 Borrowing ERC20 Tokens**
+### **Borrowing ERC20 Tokens**
 
 A user can borrow against deposited ETH.\
 The system supports:
@@ -94,7 +94,7 @@ The system supports:
 
 ***
 
-### **4.4 Repaying Debt**
+### **Repaying Debt**
 
 Borrowers may repay partially or fully at any time.
 
@@ -117,7 +117,7 @@ Borrowers may repay partially or fully at any time.
 
 ***
 
-### **4.5 Withdrawing Collateral**
+### **Withdrawing Collateral**
 
 A borrower can withdraw ETH only if the remaining collateral keeps their position safe.
 
@@ -138,7 +138,7 @@ A borrower can withdraw ETH only if the remaining collateral keeps their positio
 
 ***
 
-### **4.6 Liquidation**
+### **Liquidation**
 
 A liquidation occurs when a borrower’s health factor falls below `1.0`, meaning:
 
