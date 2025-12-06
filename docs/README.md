@@ -1,7 +1,5 @@
 # Welcome
 
-## **Welcome to BitLoan Documentation**
-
 Welcome to the official BitLoan documentation.\
 This guide will give you a complete overview of how the BitLoan protocol works—from high-level concepts to deep technical architecture. Whether you’re a borrower, liquidity supplier, liquidator, or developer, you’ll find everything you need to understand, integrate, and build on the protocol.
 
