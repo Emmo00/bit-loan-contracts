@@ -13,7 +13,7 @@ BitLoan follows a modular, highly-segmented architecture designed for clarity, s
 
 #### **High-Level System Diagram**
 
-![Architecture](<architecture.png>)
+<figure><img src="../.gitbook/assets/Untitled diagram-2025-12-06-001436.png" alt=""><figcaption></figcaption></figure>
 
 #### **ETH Flows vs ERC-20 Flows**
 
