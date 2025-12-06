@@ -86,6 +86,12 @@ The **central contract** that handles all lending, borrowing, and interest accou
   Executes a liquidation when a user's health factor is below threshold.
 * **accrueInterest()**\
   Updates interest indexes for the current block.
+* **healthFactor(user)**\
+  Real-time safety metric.
+* **healthFactorAfterBorrow(user, amount)**\
+  Predicts safety after borrowing.
+* **healthFactorAfterWithdrawCollateral(user, amount)**\
+  Predicts safety after withdrawing ETH.
 * **utilization()**
 * **borrowRate()**
 * **supplyRate()**
@@ -103,7 +109,6 @@ Handles the storage and valuation of all ETH collateral in the system.
 * Maintain per-user ETH collateral balances
 * Compute collateral value using the PriceOracle
 * Enforce collateral factors and liquidation thresholds
-* Compute the user’s health factor
 * Perform “after operation” simulations for borrow and withdraw
 * Supply collateral limits to the LendingPool
 * Provide collateral seizure during liquidation events
@@ -116,12 +121,6 @@ Handles the storage and valuation of all ETH collateral in the system.
   Converts ETH → borrow token value using price feed.
 * **getMaxBorrow(user)**\
   Maximum amount the user can borrow safely.
-* **healthFactor(user)**\
-  Real-time safety metric.
-* **healthFactorAfterBorrow(user, amount)**\
-  Predicts safety after borrowing.
-* **healthFactorAfterWithdrawCollateral(user, amount)**\
-  Predicts safety after withdrawing ETH.
 * **seizeCollateral(user, amount)**\
   Used in liquidations to transfer collateral to the liquidator.
 
