@@ -13,39 +13,7 @@ BitLoan follows a modular, highly-segmented architecture designed for clarity, s
 
 #### **High-Level System Diagram**
 
-```mermaid
----
-title: BitLoan Architecture
----
-
-flowchart LR
-  subgraph OracleBlock[ ]
-    PO("**PriceOracle**<br/>(ETH/Borrow Token)")
-  end
-
-  subgraph PoolBlock[ ]
-    LP("**LendingPool**<br/>- Supply / Borrow accounting<br/>- Interest accrual & indices<br/>- Validates collateral w/ CollateralManager<br/>- Moves ERC20 funds")
-  end
-
-  subgraph BottomRow[ ]
-    CM("**CollateralManager**<br/>- Tracks ETH<br/>- Valuations<br/>- Health factor")
-    IR("**InterestRateModel**<br/>- Borrow / Supply rates<br/>- Utilization curves")
-  end
-
-  PO e1@-->|price| LP
-  LP e2@-->|calls| CM
-  LP e3@-->|calls| IR
-  classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite;
-  class e1 animate
-  class e2 animate
-  class e3 animate
-
-
-  style PO fill:#fff,stroke:#0fff0f,stroke-width:5px,color:#000
-  style LP fill:#ffffff,stroke:#0b63c6,stroke-width:5px,stroke-dasharray: 0
-  style CM fill:#f3f4f6,stroke:#06b3c6,stroke-width:5px
-  style IR fill:#f3f4f6,stroke:#0b636c,stroke-width:5px
-```
+![Architecture](<Untitled diagram-2025-12-06-001436.png>)
 
 #### **ETH Flows vs ERC-20 Flows**
 
