@@ -1,0 +1,31 @@
+---
+config:
+  layout: dagre
+  look: handDrawn
+  theme: forest
+title: BitLoan Architecture
+---
+flowchart LR
+ subgraph OracleBlock[" "]
+        PO("**PriceOracle**<br>(ETH/Borrow Token)")
+  end
+ subgraph PoolBlock[" "]
+        LP("**LendingPool**<br>- Supply / Borrow accounting<br>- Interest accrual &amp; indices<br>- Validates collateral w/ CollateralManager<br>- Moves ERC20 funds")
+  end
+ subgraph BottomRow[" "]
+        CM("**CollateralManager**<br>- Store &amp; Tracks ETH Collateral<br>- Valuations")
+        IR("**InterestRateModel**<br>- Borrow / Supply rates<br>- Utilization curves")
+  end
+    PO L_PO_LP_0@-- price --> LP
+    CM L_CM_LP_0@<-- calls --> LP
+    IR L_IR_LP_0@-- calls --> LP
+
+    classDef animate stroke-dasharray: 9,5,stroke-dashoffset: 900,animation: dash 25s linear infinite
+    style PO fill:#fff,stroke:#0fff0f,stroke-width:5px,color:#000
+    style LP fill:#ffffff,stroke:#0b63c6,stroke-width:5px,stroke-dasharray: 0
+    style CM fill:#f3f4f6,stroke:#06b3c6,stroke-width:5px
+    style IR fill:#f3f4f6,stroke:#0b636c,stroke-width:5px
+
+    L_PO_LP_0@{ animation: slow } 
+    L_CM_LP_0@{ animation: slow } 
+    L_IR_LP_0@{ animation: slow }
